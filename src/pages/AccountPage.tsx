@@ -9,7 +9,7 @@ export function AccountPage() {
   const { customer, loading } = useAuth()
   const [orders, setOrders] = useState<Order[]>([])
   const [error, setError] = useState<string | null>(null)
-  const [busyId, setBusyId] = useState<number | null>(null)
+  const [busyId, setBusyId] = useState<string | null>(null)
 
   const loadOrders = useCallback(async () => {
     try {
@@ -25,7 +25,7 @@ export function AccountPage() {
     if (customer) void loadOrders()
   }, [customer, loadOrders])
 
-  async function markPaid(id: number) {
+  async function markPaid(id: string) {
     setBusyId(id)
     try {
       await api.payOrder(id)
@@ -104,11 +104,11 @@ export function AccountPage() {
                 >
                   <div>
                     <p className="font-semibold text-ink">
-                      #{o.id} · {o.planName}
+                      #{o.id.slice(0, 8)} · {o.planName}
                     </p>
                     <p className="text-sm text-ink-muted">
                       {formatLkr(o.amountLkr)} · {o.status} ·{' '}
-                      {new Date(o.createdAt + 'Z').toLocaleString()}
+                      {new Date(o.createdAt).toLocaleString()}
                     </p>
                   </div>
                   {o.status === 'pending' && (

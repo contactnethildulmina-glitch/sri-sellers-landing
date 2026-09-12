@@ -7,7 +7,7 @@ export function Plans() {
   const [plans, setPlans] = useState<Plan[]>([])
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
-  const [orderingId, setOrderingId] = useState<number | null>(null)
+  const [orderingId, setOrderingId] = useState<string | null>(null)
   const [message, setMessage] = useState<string | null>(null)
   const { customer } = useAuth()
   const navigate = useNavigate()
@@ -23,7 +23,7 @@ export function Plans() {
           setError(
             e instanceof Error
               ? e.message
-              : 'Could not load plans. Is the API running on port 3001?',
+              : 'Could not load plans from Supabase.',
           )
         }
       } finally {
@@ -35,7 +35,7 @@ export function Plans() {
     }
   }, [])
 
-  async function orderPlan(planId: number) {
+  async function orderPlan(planId: string) {
     setMessage(null)
     if (!customer) {
       navigate('/login', { state: { from: '/', planId } })
@@ -71,7 +71,7 @@ export function Plans() {
             Choose a VPN plan
           </h2>
           <p className="mt-4 text-base text-ink-muted sm:text-lg">
-            Plans load from the live API / SQLite database. Payment status is mock —
+            Plans load from the live Supabase database. Payment status is mock —
             create an order, then confirm payment from your account.
           </p>
         </div>
@@ -83,8 +83,8 @@ export function Plans() {
           <div className="mx-auto mt-10 max-w-lg rounded-xl border border-terracotta/30 bg-terracotta/5 px-4 py-3 text-sm text-terracotta">
             {error}
             <p className="mt-2 text-ink-muted">
-              Start the backend with <code className="font-mono text-xs">npm run start</code>{' '}
-              inside <code className="font-mono text-xs">server/</code>.
+              Check <code className="font-mono text-xs">VITE_SUPABASE_URL</code> and{' '}
+              <code className="font-mono text-xs">VITE_SUPABASE_ANON_KEY</code>.
             </p>
           </div>
         )}

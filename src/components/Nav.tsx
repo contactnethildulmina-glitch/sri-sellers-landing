@@ -86,7 +86,7 @@ export function Nav() {
               </Link>
               <button
                 type="button"
-                onClick={logout}
+                onClick={() => void logout()}
                 className="rounded-full border border-teal/20 px-4 py-2 text-sm font-semibold text-teal hover:bg-cream-dark/50"
               >
                 Log out
@@ -173,7 +173,7 @@ export function Nav() {
                     type="button"
                     className="block w-full rounded-full border border-teal/20 px-4 py-3 text-center text-sm font-semibold text-teal"
                     onClick={() => {
-                      logout()
+                      void logout()
                       setOpen(false)
                     }}
                   >

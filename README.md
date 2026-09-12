@@ -1,106 +1,104 @@
 # SRI VPN — Subscription Storefront
 
-Marketing site + Node API for **SRI VPN**: sell VPN subscription plans with a real **SQLite** database (customers, plans, orders).
+Marketing site + cloud Auth/DB for **SRI VPN**: sell VPN subscription plans with **Supabase** (Auth, Postgres, RLS). Works on static **GitHub Pages** — no Node API required in production.
 
-> **GitHub Pages is static-only.** The live Pages site shows the marketing UI, but register / login / orders need the local (or hosted) API. Full-stack demo = run `server` + Vite locally.
+The local Express + SQLite server under `server/` remains as an optional offline fallback for development.
+
+## Live site
+
+https://contactnethildulmina-glitch.github.io/sri-sellers-landing/
+
+Public Pages build uses Supabase cloud for:
+
+- Loading active plans
+- Email/password register & login
+- Creating orders (`pending`) and mock “pay” → `paid`
+- Listing the signed-in user’s orders
 
 ## Stack
 
 | Layer | Tech |
 |-------|------|
 | Frontend | Vite + React + TypeScript + Tailwind CSS v4 + React Router |
-| Backend | Express + better-sqlite3 + bcryptjs + JWT + Zod |
-| DB file | `server/data/sri-vpn.db` |
+| Cloud | Supabase Auth + Postgres (`plans`, `profiles`, `orders`) + RLS |
+| Optional local API | Express + better-sqlite3 (`server/`) |
 
 ## Prerequisites
 
 - Node.js 20+
 - npm 9+
+- A Supabase project (this repo is wired to project `kjfyekizmfbjqqqmgamb`)
 
-## Quick start (full stack)
+## Frontend env
+
+Copy `.env.example` → `.env` for local dev:
 
 ```bash
-# From repo root
-npm run install:all
+VITE_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
+VITE_SUPABASE_ANON_KEY=your_anon_jwt_key
+```
 
-# Terminal 1 — API (seeds 3 plans on first boot)
-npm run start:server
-# → http://localhost:3001
+- Use the **legacy anon JWT** with `@supabase/supabase-js` (not the service_role key).
+- The anon / publishable key is **public by design** and safe in the browser; RLS protects data.
+- `.env.production` is committed so `npm run build` bakes the public URL + anon key for GitHub Pages.
+- Never commit a **service_role** key.
 
-# Terminal 2 — frontend
+## Quick start
+
+```bash
+npm install
 npm run dev
 # → http://localhost:5173/sri-sellers-landing/
 ```
 
-Optional env for the server (`server/.env`):
+Plans, auth, and orders talk directly to Supabase from the browser.
+
+### Optional local SQLite API
 
 ```bash
-PORT=3001
-JWT_SECRET=change-me-to-a-long-random-string
-JWT_EXPIRES=7d
-CORS_ORIGIN=http://localhost:5173
+npm run install:all
+npm run start:server   # http://localhost:3001
 ```
 
-Optional frontend env (`.env` at repo root):
+The frontend no longer calls this by default; keep it if you need an offline demo of the old REST shape.
 
-```bash
-# Defaults to http://localhost:3001 — only set if your API is elsewhere
-VITE_API_URL=http://localhost:3001
-```
-
-Vite also proxies `/api` → `http://localhost:3001` in dev if you point the client at the same origin.
-
-## Production frontend build
+## Production build / GitHub Pages
 
 ```bash
 npm run build
-npm run preview
+# dist/ is published to the gh-pages branch with base /sri-sellers-landing/
 ```
 
-`base` is `/sri-sellers-landing/` for GitHub Pages path compatibility.
+## How to use the app
 
-## API endpoints
+1. Open the site → **Plans** load from Supabase `plans`.
+2. **Register** (name, email, password ≥ 8 chars) or **Log in**.
+3. While signed in, click **Subscribe** on a plan → creates an `orders` row with status `pending`.
+4. Open **My account** → **Mark as paid (mock)** updates the order to `paid`.
 
-| Method | Path | Auth | Description |
-|--------|------|------|-------------|
-| GET | `/api/health` | — | Health check |
-| GET | `/api/plans` | — | List active plans (seeded Monthly / Quarterly / Yearly) |
-| POST | `/api/auth/register` | — | `{ name, email, password }` → JWT + customer |
-| POST | `/api/auth/login` | — | `{ email, password }` → JWT + customer |
-| GET | `/api/auth/me` | Bearer | Current customer |
-| POST | `/api/orders` | Bearer | `{ planId }` → pending order |
-| GET | `/api/orders/me` | Bearer | Current user’s orders |
-| POST | `/api/orders/:id/pay` | Bearer | Mock payment → `paid` |
+If registration says to check email, disable “Confirm email” under Supabase → Authentication → Providers → Email (or confirm via the link).
 
-Passwords are **bcrypt-hashed**. There is **no** real payment gateway or VPN server provisioning — config download is a placeholder after “paid”.
+## Supabase schema (already migrated + seeded)
 
-## Schema (SQLite)
-
-- `plans` — id, name, price_lkr, duration_days, features_json, active
-- `customers` — id, name, email (unique), password_hash, created_at
-- `orders` — id, customer_id, plan_id, amount_lkr, status (`pending`\|`paid`\|`cancelled`), created_at
-
-Seed prices (placeholders): Monthly **LKR 990**, Quarterly **LKR 2,490**, Yearly **LKR 7,990**.
-
-## GitHub Pages
-
-Static marketing build may be published to:
-
-https://contactnethildulmina-glitch.github.io/sri-sellers-landing/
-
-**The API will not run on Pages.** Use local Node for the real demo.
+- `public.plans` — id (uuid), name, price_lkr, duration_days, features (jsonb), active  
+  Seed: Monthly **990** / Quarterly **2490** / Yearly **7990** LKR  
+- `public.profiles` — id (FK `auth.users`), name, email (trigger on signup)  
+- `public.orders` — id, customer_id, plan_id, amount_lkr, status (`pending`\|`paid`\|`cancelled`)  
+- RLS: active plans readable; profiles/orders own-row only
 
 ## Project layout
 
 ```
-├── src/                 # React frontend
+├── src/
 │   ├── components/      # Landing sections
 │   ├── pages/           # Landing, login, register, account
-│   ├── context/         # Auth (JWT in localStorage)
-│   └── lib/api.ts       # REST client
-├── server/              # Express API + SQLite
-│   ├── src/
-│   └── data/sri-vpn.db  # created at runtime (gitignored)
+│   ├── context/         # Auth (Supabase session)
+│   └── lib/
+│       ├── supabase.ts  # createClient
+│       └── api.ts       # plans / orders helpers
+├── server/              # Optional Express + SQLite fallback
+├── .env.example
+├── .env.production      # Public URL + anon key for Pages build
 └── README.md
 ```
 
