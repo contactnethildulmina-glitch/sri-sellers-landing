@@ -1,89 +1,21 @@
 const features = [
   {
-    title: 'Open a shop in minutes',
-    body: 'Create your storefront with a clear name, story, and contact details — no technical setup required.',
+    title: 'Fast encrypted tunnels',
+    body: 'Modern protocols designed for everyday browsing, streaming, and work — without bloated apps.',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path
-          d="M4 10l2-5h12l2 5M4 10v9a1 1 0 001 1h14a1 1 0 001-1v-9M4 10h16"
+          d="M13 3L4 14h7l-1 7 9-11h-7l1-7z"
           stroke="currentColor"
           strokeWidth="1.75"
-          strokeLinecap="round"
           strokeLinejoin="round"
         />
-        <path
-          d="M9 14h6"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-        />
       </svg>
     ),
   },
   {
-    title: 'List products with ease',
-    body: 'Add photos, prices in LKR, stock notes, and categories so buyers find what they need quickly.',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <rect
-          x="3"
-          y="4"
-          width="18"
-          height="16"
-          rx="2"
-          stroke="currentColor"
-          strokeWidth="1.75"
-        />
-        <path
-          d="M3 9h18M8 4v5"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-        />
-      </svg>
-    ),
-  },
-  {
-    title: 'Sri Lanka–friendly by design',
-    body: 'Copy, currency, and workflows tuned for local sellers — from home kitchens to wholesale traders.',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1.75" />
-        <path
-          d="M4.5 12h15M12 4.5c2.5 2.8 2.5 12.2 0 15M12 4.5c-2.5 2.8-2.5 12.2 0 15"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-        />
-      </svg>
-    ),
-  },
-  {
-    title: 'Mobile-first selling',
-    body: 'Manage listings on the go. Most sellers work from a phone — so the experience starts there.',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <rect
-          x="7"
-          y="3"
-          width="10"
-          height="18"
-          rx="2"
-          stroke="currentColor"
-          strokeWidth="1.75"
-        />
-        <path
-          d="M11 17h2"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-        />
-      </svg>
-    ),
-  },
-  {
-    title: 'Clear, trustworthy storefronts',
-    body: 'Present your brand with a clean layout buyers can trust — no cluttered templates or confusing fees on the page.',
+    title: 'Strong privacy defaults',
+    body: 'Traffic is wrapped in encryption so public Wi‑Fi and shared networks are less of a gamble.',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path
@@ -103,23 +35,47 @@ const features = [
     ),
   },
   {
-    title: 'Grow at your pace',
-    body: 'Start with a handful of products. Expand categories as demand grows — without rebuilding everything.',
+    title: 'Servers where you need them',
+    body: 'Pick locations that fit travel, work, or local access patterns. Expand nodes as demand grows.',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1.75" />
         <path
-          d="M4 19V5M4 19h16"
+          d="M4.5 12h15M12 4.5c2.5 2.8 2.5 12.2 0 15M12 4.5c-2.5 2.8-2.5 12.2 0 15"
           stroke="currentColor"
           strokeWidth="1.75"
           strokeLinecap="round"
         />
-        <path
-          d="M8 15l3-4 3 2 4-6"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+      </svg>
+    ),
+  },
+  {
+    title: 'Clear LKR pricing',
+    body: 'Monthly, quarterly, and yearly plans with transparent Sri Lankan Rupee prices — no surprise fees on the page.',
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" strokeWidth="1.75" />
+        <path d="M3 10h18" stroke="currentColor" strokeWidth="1.75" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Multi-device ready',
+    body: 'Higher tiers unlock more simultaneous devices so phones, laptops, and tablets stay covered.',
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="7" y="3" width="10" height="18" rx="2" stroke="currentColor" strokeWidth="1.75" />
+        <path d="M11 17h2" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Honest product claims',
+    body: 'We do not invent third-party audits or miracle speeds. Marketing stays grounded; the storefront is the demo.',
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1.75" />
+        <path d="M12 8v4.5M12 16h.01" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
       </svg>
     ),
   },
@@ -141,11 +97,11 @@ export function Features() {
             id="features-heading"
             className="mt-2 font-display text-3xl font-semibold tracking-tight text-teal sm:text-4xl"
           >
-            Everything you need to sell online
+            Built for everyday privacy
           </h2>
           <p className="mt-4 text-base text-ink-muted sm:text-lg">
-            Practical tools for Sri Lankan sellers — focused on shop setup, listings,
-            and a storefront buyers understand.
+            Speed, security, and simple subscriptions — marketed clearly for customers in
+            Sri Lanka and anyone who prefers LKR billing.
           </p>
         </div>
 

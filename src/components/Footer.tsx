@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 export function Footer() {
   const year = new Date().getFullYear()
 
@@ -8,20 +10,18 @@ export function Footer() {
       </h2>
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-10 sm:px-6 lg:flex-row lg:items-start lg:justify-between lg:px-8">
         <div>
-          <a href="#top" className="inline-flex items-center gap-2.5">
+          <Link to="/" className="inline-flex items-center gap-2.5">
             <span
               className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal text-xs font-bold text-cream"
               aria-hidden="true"
             >
-              S
+              V
             </span>
-            <span className="font-display text-base font-semibold text-teal">
-              SRI Sellers
-            </span>
-          </a>
+            <span className="font-display text-base font-semibold text-teal">SRI VPN</span>
+          </Link>
           <p className="mt-3 max-w-xs text-sm text-ink-muted">
-            A Sri Lanka–focused platform for sellers to open a shop and list products
-            with confidence.
+            A Sri Lanka–friendly VPN subscription storefront with real SQLite-backed plans,
+            customers, and orders.
           </p>
         </div>
 
@@ -33,27 +33,27 @@ export function Footer() {
               </a>
             </li>
             <li>
-              <a href="#how-it-works" className="text-ink-muted hover:text-teal">
-                How it works
+              <a href="#plans" className="text-ink-muted hover:text-teal">
+                Plans
               </a>
             </li>
             <li>
-              <a href="#who-its-for" className="text-ink-muted hover:text-teal">
-                Who it’s for
+              <a href="#faq" className="text-ink-muted hover:text-teal">
+                FAQ
               </a>
             </li>
             <li>
-              <a href="#cta" className="text-ink-muted hover:text-teal">
-                Early access
-              </a>
+              <Link to="/login" className="text-ink-muted hover:text-teal">
+                Log in
+              </Link>
             </li>
           </ul>
         </nav>
       </div>
       <div className="border-t border-cream-dark">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-xs text-ink-muted sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-          <p>© {year} SRI Sellers. All rights reserved.</p>
-          <p>Made for sellers across Sri Lanka.</p>
+          <p>© {year} SRI VPN. All rights reserved.</p>
+          <p>Sales demo — no live VPN provisioning.</p>
         </div>
       </div>
     </footer>

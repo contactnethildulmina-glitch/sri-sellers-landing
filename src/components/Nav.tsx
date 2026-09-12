@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
-const links = [
+const landingLinks = [
   { href: '#features', label: 'Features' },
+  { href: '#plans', label: 'Plans' },
   { href: '#how-it-works', label: 'How it works' },
-  { href: '#who-its-for', label: 'Who it’s for' },
+  { href: '#faq', label: 'FAQ' },
 ]
 
 export function Nav() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const { customer, logout } = useAuth()
+  const location = useLocation()
+  const onLanding = location.pathname === '/'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -24,6 +30,10 @@ export function Nav() {
     }
   }, [open])
 
+  useEffect(() => {
+    setOpen(false)
+  }, [location.pathname])
+
   return (
     <header
       className={`sticky top-0 z-50 transition-shadow duration-300 ${
@@ -36,41 +46,68 @@ export function Nav() {
         className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8"
         aria-label="Primary"
       >
-        <a
-          href="#top"
+        <Link
+          to="/"
           className="flex items-center gap-2.5 rounded-lg focus-visible:outline-offset-4"
         >
           <span
             className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal text-sm font-bold text-cream"
             aria-hidden="true"
           >
-            S
+            V
           </span>
           <span className="font-display text-lg font-semibold tracking-tight text-teal">
-            SRI Sellers
+            SRI VPN
           </span>
-        </a>
+        </Link>
 
         <ul className="hidden items-center gap-8 md:flex">
-          {links.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                className="text-sm font-medium text-ink-muted transition-colors hover:text-teal"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
+          {onLanding &&
+            landingLinks.map((link) => (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  className="text-sm font-medium text-ink-muted transition-colors hover:text-teal"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
         </ul>
 
-        <div className="hidden md:block">
-          <a
-            href="#cta"
-            className="inline-flex items-center justify-center rounded-full bg-teal px-5 py-2.5 text-sm font-semibold text-cream shadow-sm transition hover:bg-teal-mid"
-          >
-            Start selling
-          </a>
+        <div className="hidden items-center gap-3 md:flex">
+          {customer ? (
+            <>
+              <Link
+                to="/account"
+                className="text-sm font-medium text-ink-muted hover:text-teal"
+              >
+                {customer.name}
+              </Link>
+              <button
+                type="button"
+                onClick={logout}
+                className="rounded-full border border-teal/20 px-4 py-2 text-sm font-semibold text-teal hover:bg-cream-dark/50"
+              >
+                Log out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="text-sm font-medium text-ink-muted hover:text-teal"
+              >
+                Log in
+              </Link>
+              <Link
+                to="/register"
+                className="inline-flex items-center justify-center rounded-full bg-teal px-5 py-2.5 text-sm font-semibold text-cream shadow-sm transition hover:bg-teal-mid"
+              >
+                Get started
+              </Link>
+            </>
+          )}
         </div>
 
         <button
@@ -109,26 +146,61 @@ export function Nav() {
           className="border-t border-cream-dark bg-cream px-4 py-4 md:hidden"
         >
           <ul className="flex flex-col gap-1">
-            {links.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  className="block rounded-lg px-3 py-3 text-base font-medium text-ink hover:bg-cream-dark"
-                  onClick={() => setOpen(false)}
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-            <li className="pt-2">
-              <a
-                href="#cta"
-                className="block rounded-full bg-teal px-4 py-3 text-center text-sm font-semibold text-cream"
-                onClick={() => setOpen(false)}
-              >
-                Start selling
-              </a>
-            </li>
+            {onLanding &&
+              landingLinks.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className="block rounded-lg px-3 py-3 text-base font-medium text-ink hover:bg-cream-dark"
+                    onClick={() => setOpen(false)}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            {customer ? (
+              <>
+                <li>
+                  <Link
+                    to="/account"
+                    className="block rounded-lg px-3 py-3 text-base font-medium text-ink hover:bg-cream-dark"
+                  >
+                    My account
+                  </Link>
+                </li>
+                <li className="pt-2">
+                  <button
+                    type="button"
+                    className="block w-full rounded-full border border-teal/20 px-4 py-3 text-center text-sm font-semibold text-teal"
+                    onClick={() => {
+                      logout()
+                      setOpen(false)
+                    }}
+                  >
+                    Log out
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link
+                    to="/login"
+                    className="block rounded-lg px-3 py-3 text-base font-medium text-ink hover:bg-cream-dark"
+                  >
+                    Log in
+                  </Link>
+                </li>
+                <li className="pt-2">
+                  <Link
+                    to="/register"
+                    className="block rounded-full bg-teal px-4 py-3 text-center text-sm font-semibold text-cream"
+                  >
+                    Get started
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       )}
